@@ -121,7 +121,9 @@ function randomNo() {
 function randButtonClicked(e) {
   e.target.textContent = randomNo();
   if (turn == noPlayers) turn = 1;
-  else turn++;
+  else {
+    if (randomNumber != 6) turn++;
+  }
   pTurnDiv.textContent = `Player${turn}`;
   // console.log("turns ",turn)
 }
@@ -140,6 +142,7 @@ function isFucked(player) {
           document
             .getElementById(players[key][key2].initialPt)
             .appendChild(fuckedT);
+            players[key][key2].currentPosition=null;
         }
       }
     }
