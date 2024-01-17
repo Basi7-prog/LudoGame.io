@@ -61,6 +61,7 @@ var parentDiv = document.createElement("div");
 var parentDiv2 = document.createElement("div");
 for (var i = 0; i < 85; i++) {
   var newdiv = document.createElement("div");
+  var span = document.createElement("span");
   newdiv.classList.add("gridElement");
   newdiv.id = `g${i}`;
   // newdiv.textContent = `${i}`;
@@ -90,8 +91,11 @@ for (var i = 0; i < 85; i++) {
     }
   }
 
-  parentDiv2.classList.add("parent-div");
+  span.classList.add("parent-div-wraper");
 
+  newdiv.appendChild(span);
+  
+  parentDiv2.classList.add("parent-div");
   parentDiv2.appendChild(newdiv);
 }
 parentDiv.classList.add("console");
@@ -167,7 +171,7 @@ function clickedToken(e) {
         // console.log(e.target.parentNode.id);
         e.target.parentNode.removeChild(e.target);
 
-        var newParent = document.getElementById(`g${player.route[0]}`);
+        var newParent = document.getElementById(`g${player.route[0]}`).firstChild;
         newParent.appendChild(e.target);
         player.currentPosition = 0;
         madeMove = true;
@@ -177,7 +181,7 @@ function clickedToken(e) {
           e.target.parentNode.removeChild(e.target);
           var newParent = document.getElementById(
             `g${player.route[newPosition]}`
-          );
+          ).firstChild;
           newParent.appendChild(e.target);
           player.currentPosition = newPosition;
           if (!safeCells.includes(player.route[player.currentPosition]))
@@ -206,7 +210,7 @@ function CreateToken(id, parentId, colr) {
   player1Token.style.border = `2px ${colr} solid`;
   player1Token.id = id;
   player1Token.onclick = clickedToken;
-  parentPlayerDiv = document.getElementById(parentId);
+  parentPlayerDiv = document.getElementById(parentId).firstChild;
   parentPlayerDiv.appendChild(player1Token);
 }
 
