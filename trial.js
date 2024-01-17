@@ -252,7 +252,7 @@ function Player(p) {
   }
   return p1;
 }
-var players = [Player(1), Player(2)];
+var players = [Player(1), Player(4)];
 // for (i = 1; i <= noPlayers; i++) {
 //   players[`p${i}`] = Player(i);
 //   console.log(`p${i}`)
