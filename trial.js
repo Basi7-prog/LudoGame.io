@@ -153,6 +153,7 @@ function isFucked(player) {
             .getElementById(players[key][key2].initialPt)
             .appendChild(fuckedT);
           players[key][key2].currentPosition = null;
+          randomNumber=6;//this will give another run, since prevNumber is 6 nxt player will be it self 
         }
       }
     }
@@ -196,6 +197,10 @@ function clickedToken(e) {
           //   }
           // });
         }
+        if(newPosition == player.route.length-1){
+          randomNumber=6;
+        }
+
         madeMove = true;
       }
     } else {
