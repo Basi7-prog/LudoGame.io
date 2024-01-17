@@ -110,7 +110,7 @@ document.body.appendChild(parentDiv);
 // logic starts here
 
 var randomNumber = 0;
-var noPlayers = 4;
+var noPlayers = 2;
 var turn = 0;
 
 function randomNo() {
@@ -252,7 +252,7 @@ function Player(p) {
   }
   return p1;
 }
-var players = [Player(1), Player(2), Player(3), Player(4)];
+var players = [Player(1), Player(2)];
 // for (i = 1; i <= noPlayers; i++) {
 //   players[`p${i}`] = Player(i);
 //   console.log(`p${i}`)
