@@ -112,17 +112,23 @@ document.body.appendChild(parentDiv);
 var randomNumber = 0;
 var noPlayers = 2;
 var turn = 0;
+var madeMove = false;
 
 function randomNo() {
   randomNumber = Math.floor(Math.random() * 6) + 1;
+  madeMove=false;
   return randomNumber;
 }
 
 function randButtonClicked(e) {
+  const prevRandomNo = randomNumber;
   e.target.textContent = randomNo();
-  if (turn == noPlayers) turn = 1;
-  else {
-    if (randomNumber != 6) turn++;
+  if (prevRandomNo != 6) {
+    if (turn == noPlayers) {
+      turn = 1;
+    } else {
+      turn++;
+    }
   }
   pTurnDiv.textContent = `Player${turn}`;
   // console.log("turns ",turn)
@@ -142,7 +148,7 @@ function isFucked(player) {
           document
             .getElementById(players[key][key2].initialPt)
             .appendChild(fuckedT);
-            players[key][key2].currentPosition=null;
+          players[key][key2].currentPosition = null;
         }
       }
     }
@@ -153,7 +159,7 @@ function clickedToken(e) {
 
   if (randomNumber > 0) {
     var player;
-    if (typeof players[turn - 1][e.target.id] != "undefined") {
+    if (typeof players[turn - 1][e.target.id] != "undefined"&&!madeMove) {
       // console.log("found it", players[turn-1][e.target.id]);
       player = players[turn - 1][e.target.id];
 
@@ -164,6 +170,7 @@ function clickedToken(e) {
         var newParent = document.getElementById(`g${player.route[0]}`);
         newParent.appendChild(e.target);
         player.currentPosition = 0;
+        madeMove = true;
       } else if (player.currentPosition != null) {
         const newPosition = player.currentPosition + randomNumber;
         if (newPosition < player.route.length) {
@@ -175,6 +182,7 @@ function clickedToken(e) {
           player.currentPosition = newPosition;
           if (!safeCells.includes(player.route[player.currentPosition]))
             isFucked(player);
+          
           // players.forEach((unSafeP, index) => {
           //   if (index != turn - 1) {
           //     console.log(`checking unsafe token ${typeof unSafeP}`);
@@ -184,8 +192,8 @@ function clickedToken(e) {
           //   }
           // });
         }
+        madeMove = true;
       }
-      randomNumber = 0;
     } else {
       console.log("undefined");
     }
