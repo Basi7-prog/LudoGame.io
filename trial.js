@@ -117,6 +117,7 @@ var randomNumber = 0;
 var noPlayers = 2;
 var turn = 0;
 var madeMove = false;
+// var takenCells = [];
 
 function randomNo() {
   randomNumber = Math.floor(Math.random() * 6) + 1;
@@ -125,7 +126,6 @@ function randomNo() {
 
 function randButtonClicked(e) {
   const prevRandomNo = randomNumber;
-  e.target.textContent = randomNo(e.target);
   if (prevRandomNo != 6) {
     if (turn == noPlayers) {
       turn = 1;
@@ -133,6 +133,8 @@ function randButtonClicked(e) {
       turn++;
     }
   }
+
+  e.target.textContent = checkCellFree(players[turn - 1]);
   pTurnDiv.textContent = `Player${turn}`;
   madeMove = false;
   // console.log("turns ",turn)
@@ -159,27 +161,75 @@ function isFucked(player) {
     }
   }
 }
-function checkCellFree(playerT, currentPosition, selectedP) {
-  var newPosition = currentPosition + randomNumber;
-  var isFree = true;
-  while (true) {
-    for (const [key, value] of Object.entries(playerT)) {
-      if (selectedP != key) {
-        console.log("find a cell", key, value.currentPosition, newPosition);
-        if (newPosition == value.currentPosition) {
-          isFree = false;
-          break;
-        }
-        isFree = true;
-      }
-    }
-    if (!isFree) newPosition = randomNo() + currentPosition;
-    else break;
+
+function checkCellFree(player) {
+  randomNo();
+  var takenCells = [];
+  var blackListedNo = [];
+
+  for (const [key, value] of Object.entries(player)) {
+    const cP = value.route[value.currentPosition];
+    takenCells.push(cP);
+    console.log("token ", cP);
   }
-  var changeButtonText=document.getElementById("randButton");
-  changeButtonText.textContent=randomNumber;
-  return newPosition;
+
+  console.log("taken cells ", takenCells);
+  var isTaken = true;
+  while (isTaken) {
+    for (const [key, value] of Object.entries(player)) {
+      const cP = value.currentPosition;
+      if (safeCells.includes(value.route[randomNumber + cP])) {
+        isTaken = false;
+        break;
+      }
+      if (cP != null && takenCells.includes(value.route[randomNumber + cP])) {
+        blackListedNo.push(randomNumber);
+        console.log("is it taken ", isTaken, takenCells[i]);
+        isTaken = true;
+        break;
+      } else isTaken = false;
+    }
+    // for (i = 0; i < takenCells.length; i++) {
+    //   if (
+    //     takenCells[i] != null &&
+    //     takenCells.includes(randomNumber + takenCells[i])
+    //   ) {
+    //     blackListedNo.push(randomNumber);
+    //     console.log("is it taken ", isTaken, randomNumber);
+    //     isTaken = true;
+    //     break;
+    //   } else isTaken = false;
+    // }
+    // console.log("is it taken ", isTaken, randomNumber);
+    if (isTaken) {
+      console.log("black listed no ", blackListedNo);
+      while (blackListedNo.includes(randomNo()));
+    }
+  }
+  return randomNumber;
 }
+
+// function checkCellFree(playerT, currentPosition, selectedP) {
+//   var newPosition = currentPosition + randomNumber;
+//   var isFree = true;
+//   while (true) {
+//     for (const [key, value] of Object.entries(playerT)) {
+//       if (selectedP != key) {
+//         console.log("find a cell", key, value.currentPosition, newPosition);
+//         if (newPosition == value.currentPosition) {
+//           isFree = false;
+//           break;
+//         }
+//         isFree = true;
+//       }
+//     }
+//     if (!isFree) newPosition = randomNo() + currentPosition;
+//     else break;
+//   }
+//   var changeButtonText=document.getElementById("randButton");
+//   changeButtonText.textContent=randomNumber;
+//   return newPosition;
+// }
 function clickedToken(e) {
   // console.log("clicked parent " + e.target.parentNode.id);
 
@@ -200,7 +250,8 @@ function clickedToken(e) {
         player.currentPosition = 0;
         madeMove = true;
       } else if (player.currentPosition != null) {
-        const newPosition = checkCellFree(players[turn - 1], player.currentPosition, e.target.id);
+        const newPosition = player.currentPosition + randomNumber;
+        // checkCellFree(players[turn - 1], player.currentPosition, e.target.id);
 
         if (newPosition < player.route.length) {
           e.target.parentNode.removeChild(e.target);
