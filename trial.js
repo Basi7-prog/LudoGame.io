@@ -178,7 +178,10 @@ function checkCellFree(player) {
   while (isTaken) {
     for (const [key, value] of Object.entries(player)) {
       const cP = value.currentPosition;
-      if (safeCells.includes(value.route[randomNumber + cP])) {
+      if (
+        safeCells.includes(value.route[randomNumber + cP]) ||
+        value.winningCell == value.route[randomNumber + cP]
+      ) {
         isTaken = false;
         break;
       }
