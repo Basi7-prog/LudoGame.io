@@ -94,7 +94,7 @@ for (var i = 0; i < 85; i++) {
   span.classList.add("parent-div-wraper");
 
   newdiv.appendChild(span);
-  
+
   parentDiv2.classList.add("parent-div");
   parentDiv2.appendChild(newdiv);
 }
@@ -120,13 +120,12 @@ var madeMove = false;
 
 function randomNo() {
   randomNumber = Math.floor(Math.random() * 6) + 1;
-  madeMove=false;
   return randomNumber;
 }
 
 function randButtonClicked(e) {
   const prevRandomNo = randomNumber;
-  e.target.textContent = randomNo();
+  e.target.textContent = randomNo(e.target);
   if (prevRandomNo != 6) {
     if (turn == noPlayers) {
       turn = 1;
@@ -135,36 +134,58 @@ function randButtonClicked(e) {
     }
   }
   pTurnDiv.textContent = `Player${turn}`;
+  madeMove = false;
   // console.log("turns ",turn)
 }
 function isFucked(player) {
   const currentPlayerPos = player.route[player.currentPosition];
   for (let key in players) {
     if (key != turn - 1) {
-      console.log(`key is ${key} ${currentPlayerPos}`);
+      // console.log(`key is ${key} ${currentPlayerPos}`);
       for (const [key2, value] of Object.entries(players[key])) {
         const currentPUnsafes =
           players[key][key2].route[players[key][key2].currentPosition];
-        console.log(`key2 is ${key2} ${value} ${currentPUnsafes}`);
+        // console.log(`key2 is ${key2} ${value} ${currentPUnsafes}`);
         if (currentPUnsafes == currentPlayerPos) {
           const fuckedT = document.getElementById(key2);
           fuckedT.parentNode.removeChild(fuckedT);
           document
             .getElementById(players[key][key2].initialPt)
-            .appendChild(fuckedT);
+            .firstChild.appendChild(fuckedT);
           players[key][key2].currentPosition = null;
-          randomNumber=6;//this will give another run, since prevNumber is 6 nxt player will be it self 
+          randomNumber = 6; //this will give another run, since prevNumber is 6 nxt player will be it self
         }
       }
     }
   }
+}
+function checkCellFree(playerT, currentPosition, selectedP) {
+  var newPosition = currentPosition + randomNumber;
+  var isFree = true;
+  while (true) {
+    for (const [key, value] of Object.entries(playerT)) {
+      if (selectedP != key) {
+        console.log("find a cell", key, value.currentPosition, newPosition);
+        if (newPosition == value.currentPosition) {
+          isFree = false;
+          break;
+        }
+        isFree = true;
+      }
+    }
+    if (!isFree) newPosition = randomNo() + currentPosition;
+    else break;
+  }
+  var changeButtonText=document.getElementById("randButton");
+  changeButtonText.textContent=randomNumber;
+  return newPosition;
 }
 function clickedToken(e) {
   // console.log("clicked parent " + e.target.parentNode.id);
 
   if (randomNumber > 0) {
     var player;
-    if (typeof players[turn - 1][e.target.id] != "undefined"&&!madeMove) {
+    if (typeof players[turn - 1][e.target.id] != "undefined" && !madeMove) {
       // console.log("found it", players[turn-1][e.target.id]);
       player = players[turn - 1][e.target.id];
 
@@ -172,12 +193,15 @@ function clickedToken(e) {
         // console.log(e.target.parentNode.id);
         e.target.parentNode.removeChild(e.target);
 
-        var newParent = document.getElementById(`g${player.route[0]}`).firstChild;
+        var newParent = document.getElementById(
+          `g${player.route[0]}`
+        ).firstChild;
         newParent.appendChild(e.target);
         player.currentPosition = 0;
         madeMove = true;
       } else if (player.currentPosition != null) {
-        const newPosition = player.currentPosition + randomNumber;
+        const newPosition = checkCellFree(players[turn - 1], player.currentPosition, e.target.id);
+
         if (newPosition < player.route.length) {
           e.target.parentNode.removeChild(e.target);
           var newParent = document.getElementById(
@@ -187,7 +211,7 @@ function clickedToken(e) {
           player.currentPosition = newPosition;
           if (!safeCells.includes(player.route[player.currentPosition]))
             isFucked(player);
-          
+
           // players.forEach((unSafeP, index) => {
           //   if (index != turn - 1) {
           //     console.log(`checking unsafe token ${typeof unSafeP}`);
@@ -197,8 +221,8 @@ function clickedToken(e) {
           //   }
           // });
         }
-        if(newPosition == player.route.length-1){
-          randomNumber=6;
+        if (newPosition == player.route.length - 1) {
+          randomNumber = 6;
         }
 
         madeMove = true;
