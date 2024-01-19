@@ -177,19 +177,31 @@ function checkCellFree(player) {
   var isTaken = true;
   while (isTaken) {
     for (const [key, value] of Object.entries(player)) {
+      console.log(
+        `checking ${key} currently(${value.route[value.currentPosition]}) ${
+          value.currentPosition != null
+        }`
+      );
       const cP = value.currentPosition;
-      if (
-        safeCells.includes(value.route[randomNumber + cP]) ||
-        value.winningCell == value.route[randomNumber + cP]
-      ) {
-        isTaken = false;
-        break;
-      }
-      if (cP != null && takenCells.includes(value.route[randomNumber + cP])) {
-        blackListedNo.push(randomNumber);
-        console.log("is it taken ", isTaken, takenCells[i]);
-        isTaken = true;
-        break;
+      if (cP != null && randomNumber + cP < value.route.length) {
+        if (
+          safeCells.includes(value.route[randomNumber + cP]) ||
+          value.winningCell == value.route[randomNumber + cP]
+        ) {
+          isTaken = false;
+          continue;
+        }
+        if (
+          randomNumber + cP < value.route.length &&
+          cP != null &&
+          takenCells.includes(value.route[randomNumber + cP])
+        ) {
+          blackListedNo.push(randomNumber);
+          console.log("is it taken ", isTaken, takenCells[i]);
+          isTaken = true;
+          break;
+        }
+        else isTaken=false;
       } else isTaken = false;
     }
     // for (i = 0; i < takenCells.length; i++) {
@@ -275,7 +287,8 @@ function clickedToken(e) {
           //   }
           // });
         }
-        if (newPosition == player.route.length - 1) {
+        if (newPosition == player.winningCell) {
+          playerWon(players[turn - 1], player.winningCell);
           randomNumber = 6;
         }
 
@@ -287,6 +300,18 @@ function clickedToken(e) {
   }
 }
 
+function playerWon(playerT, wCell) {
+  var won = false;
+  for (const [key, value] of Object.entries(playerT)) {
+    const cP = value.route[value.currentPosition];
+    if (wCell == cP) {
+      won = true;
+    } else won = false;
+  }
+  if (won) {
+    players = [];
+  }
+}
 function CreateToken(id, parentId, colr) {
   var player1Token = document.createElement("div");
   player1Token.classList.add("token");
