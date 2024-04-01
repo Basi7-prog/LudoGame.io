@@ -1,0 +1,25 @@
+[debug] [2024-01-27T14:41:21.215Z] ----------------------------------------------------------------------
+[debug] [2024-01-27T14:41:21.219Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\basle\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init functions
+[debug] [2024-01-27T14:41:21.220Z] CLI Version:   13.1.0
+[debug] [2024-01-27T14:41:21.220Z] Platform:      win32
+[debug] [2024-01-27T14:41:21.220Z] Node Version:  v20.11.0
+[debug] [2024-01-27T14:41:21.221Z] Time:          Sat Jan 27 2024 17:41:21 GMT+0300 (Arabian Standard Time)
+[debug] [2024-01-27T14:41:21.221Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-01-27T14:41:21.348Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-01-27T14:41:21.350Z] > authorizing via signed-in user (senbetobasleal@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  F:\NodeProject\LudoGame.io
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
